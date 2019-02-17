@@ -28,3 +28,4 @@ Route::group(['middleware' => ['auth','verified']],function(){
 });
 
 Route::get('products','ProductsController@index')->name('products.index');
+Route::get('products/{product}','ProductsController@show')->name('products.show');
