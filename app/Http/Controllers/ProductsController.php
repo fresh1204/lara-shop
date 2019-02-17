@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Exceptions\InvalidRequestException;
-
+use App\Exceptions\InternalException;
 class ProductsController extends Controller
 {
     //商品首页
@@ -61,8 +61,47 @@ class ProductsController extends Controller
     	if(! $product->on_sale){
     		//throw new \Exception('商品未上架');
     		throw new InvalidRequestException('商品未上架');
+    		//throw new InternalException('商品未上架');
     	}
 
-    	return view('products.show',['product' => $product]);
+    	//是否收藏商品的标示
+    	$favored = false;
+
+    	// 用户未登录时返回的是 null，已登录时返回的是对应的用户对象
+    	if($user = $request->user()){
+    		// 从当前用户已收藏的商品中搜索 id 为当前商品 id 的商品
+    		$favorProduct = $user->favoriteProducts()->find($product->id);
+
+    		// boolval() 函数用于把值转为布尔值
+    		$favored = boolval($favorProduct);
+    	}
+
+    	return view('products.show',['product' => $product,'favored' => $favored]);
+    }
+
+    //收藏商品
+    public function favor(Product $product,Request $request)
+    {
+    	$user = $request->user();
+
+    	//判断当前用户是否已经收藏了某商品,如果已经收藏则不做任何操作直接返回
+    	if($user->favoriteProducts()->find($product->id)){
+    		return [];
+    	}
+
+    	//否则通过 attach() 方法将当前用户和此商品关联起来。
+    	$user->favoriteProducts()->attach($product);
+
+    	return [];
+    }
+
+    //取消收藏的商品
+    public function disfavor(Product $product,Request $request)
+    {
+    	$user = $request->user();
+
+    	$user->favoriteProducts()->detach($product);
+
+    	return [];
     }
 }
