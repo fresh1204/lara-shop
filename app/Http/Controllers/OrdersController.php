@@ -9,10 +9,11 @@ use App\Models\UserAddress;
 use App\Models\ProductSku;
 use Carbon\Carbon;
 use App\Exceptions\InvalidRequestException;
+use App\Jobs\CloseOrder;
 
 class OrdersController extends Controller
 {
-    //
+    //创建订单
     public function store(OrderRequest $request)
     {
     	$user = $request->user();
@@ -74,6 +75,21 @@ class OrdersController extends Controller
     		return $order;
     	});
 
+    	//触发这个在规定时间内未支付订单任务
+    	$this->dispatch(new CloseOrder($order,config('app.order_ttl')));
+
     	return $order;
+    }
+
+    //订单列表
+    public function index(Request $request)
+    {
+        $orders = Order::query()
+            ->with(['items.product','items.productSku'])
+            ->where('user_id',$request->user()->id)
+            ->orderBy('created_at','desc')
+            ->paginate();
+
+        return view('orders.index',['orders' => $orders]);
     }
 }

@@ -123,6 +123,8 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
+    'order_ttl' => 300,
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers

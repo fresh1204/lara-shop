@@ -111,6 +111,9 @@
     // 加入购物车按钮点击事件
     
     $('.btn-add-to-cart').click(function(){
+      if(!{{ $emailActive }}){ //未激活账号
+        location.href = '/email/verify';
+      }
       // 请求加入购物车接口
       axios.post('{{ route('cart.add') }}',{
         sku_id:$('label.active input[name=skus]').val(),

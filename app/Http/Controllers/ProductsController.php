@@ -66,17 +66,22 @@ class ProductsController extends Controller
 
     	//是否收藏商品的标示
     	$favored = false;
-
+        
+        //账号是否邮箱激活
+        $emailActive = 1;
     	// 用户未登录时返回的是 null，已登录时返回的是对应的用户对象
     	if($user = $request->user()){
     		// 从当前用户已收藏的商品中搜索 id 为当前商品 id 的商品
     		$favorProduct = $user->favoriteProducts()->find($product->id);
-
     		// boolval() 函数用于把值转为布尔值
     		$favored = boolval($favorProduct);
-    	}
 
-    	return view('products.show',['product' => $product,'favored' => $favored]);
+            if(!$user->email_verified_at){ //账号未激活
+                $emailActive = 0;
+            }
+    	}
+        //var_dump($favored);exit;
+    	return view('products.show',['product' => $product,'favored' => $favored,'emailActive' => $emailActive]);
     }
 
     //收藏商品

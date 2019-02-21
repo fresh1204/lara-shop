@@ -11,7 +11,7 @@ class CartController extends Controller
 {
 	//购物车列表,收货地址列表
 	public function index(Request $request)
-	{
+	{   
 		$cartItems = $request->user()->cartItems()->with(['productSku.product'])->get();
 		$addresses = $request->user()->addresses()->orderBy('last_used_at','desc')->get();
 
@@ -20,13 +20,13 @@ class CartController extends Controller
 
     //添加商品到购物车
     public function add(AddCartRequest $request)
-    {
+    {   
     	$user = $request->user();
 
     	$skuId = $request->input('sku_id');
 
     	$amount = $request->input('amount');
-
+        
     	// 从数据库中查询该商品是否已经在购物车中
     	if($cart = $user->cartItems()->where('product_sku_id',$skuId)->first()){
 
