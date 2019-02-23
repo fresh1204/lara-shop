@@ -166,8 +166,9 @@
         .then(function(response){
           swal('订单提交成功','','success')
             .then(function(){
-              location.href = '{{ route('cart.index') }}';
+              //location.href = '{{ route('cart.index') }}';
               //location.reload();
+              location.href = '/orders/' + response.data.id; //跳转到订单详情页面
             });
         },function(error){
           if(error.response.status == 422){

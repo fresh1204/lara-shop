@@ -92,4 +92,16 @@ class OrdersController extends Controller
 
         return view('orders.index',['orders' => $orders]);
     }
+
+    //订单详情
+    public function show(Order $order,Request $request)
+    {
+        //权限校验，只允许订单的创建者可以看到对应的订单信息
+        $this->authorize('own',$order);
+
+        //延迟预加载,在已经查询出来的模型上调用
+        $order = $order->load('items.product','items.productSku');
+
+        return view('orders.show',['order' => $order]);
+    }
 }
