@@ -6,19 +6,30 @@ use Illuminate\Http\Request;
 use App\Http\Requests\OrderRequest;
 use App\Models\Order;
 use App\Models\UserAddress;
+/*
 use App\Models\ProductSku;
 use Carbon\Carbon;
 use App\Exceptions\InvalidRequestException;
 use App\Jobs\CloseOrder;
+use App\Services\CartService;
+*/
+use App\Services\OrderService;
 
 class OrdersController extends Controller
 {
     //创建订单
-    public function store(OrderRequest $request)
+    public function store(OrderRequest $request,OrderService $orderService)
     {
+
     	$user = $request->user();
+        $address = UserAddress::find($request->input('address_id'));
+        $remark = $request->input('remark');
+        $items = $request->input('items');
+
+        return $orderService->store($user,$address,$remark,$items);
+    /*
     	//开启一个数据库事务
-    	$order = \DB::transaction(function() use ($user,$request){
+    	$order = \DB::transaction(function() use ($user,$request,$cartService){
     		$address = UserAddress::find($request->input('address_id'));
     		//更新此地址的最后使用时间
     		$address->update([
@@ -61,7 +72,7 @@ class OrdersController extends Controller
     			$totalAmount += $sku->price * $data['amount'];
 
     			if($sku->decreaseStock($data['amount']) <= 0){
-    				throw new InvalidRequestException('InvalidRequestException');
+    				throw new InvalidRequestException('该商品库存不足');
     			}
     		}	
 
@@ -69,8 +80,9 @@ class OrdersController extends Controller
     		$order->update(['total_amount' => $totalAmount]);
 
     		//将下单商品从购物车中移除
-    		$skuIds = collect($items)->pluck('sku_id');
-    		$user->cartItems()->whereIn('product_sku_id',$skuIds)->delete();
+    		$skuIds = collect($items)->pluck('sku_id')->all();
+    		//$user->cartItems()->whereIn('product_sku_id',$skuIds)->delete();
+            $cartService->remove($skuIds);
 
     		return $order;
     	});
@@ -79,6 +91,7 @@ class OrdersController extends Controller
     	$this->dispatch(new CloseOrder($order,config('app.order_ttl')));
 
     	return $order;
+    */
     }
 
     //订单列表
