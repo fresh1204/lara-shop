@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Exceptions\InvalidRequestException;
 use App\Exceptions\InternalException;
+use App\Models\OrderItem;
+
 class ProductsController extends Controller
 {
     //商品首页
@@ -81,7 +83,21 @@ class ProductsController extends Controller
             }
     	}
         //var_dump($favored);exit;
-    	return view('products.show',['product' => $product,'favored' => $favored,'emailActive' => $emailActive]);
+
+        $reviews = OrderItem::query()
+            ->with(['order.user','productSku']) // 预先加载关联关系
+            ->where('product_id',$product->id)
+            ->whereNotNull('reviewed_at')   // 筛选出已评价的
+            ->orderBy('reviewed_at','desc')
+            ->limit(10)
+            ->get();
+        //echo '<pre>';print_r($reviews->toArray());exit;
+    	return view('products.show',[
+            'product' => $product,
+            'favored' => $favored,
+            'emailActive' => $emailActive,
+            'reviews' => $reviews
+        ]);
     }
 
     //收藏商品
