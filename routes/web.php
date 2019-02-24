@@ -47,6 +47,9 @@ Route::group(['middleware' => ['auth','verified']],function(){
 	//订单详情
 	Route::get('orders/{order}','OrdersController@show')->name('orders.show');
 
+	//订单的支付宝支付
+	Route::get('payment/{order}/alipay','PaymentController@payByAlipay')->name('payment.alipay');
+
 });
 
 Route::get('products','ProductsController@index')->name('products.index');
