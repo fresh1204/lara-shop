@@ -55,6 +55,8 @@ Route::group(['middleware' => ['auth','verified']],function(){
 
 	//订单的支付宝支付
 	Route::get('payment/{order}/alipay','PaymentController@payByAlipay')->name('payment.alipay');
+	Route::get('payment/alipay/return','PaymentController@alipayReturn')->name('payment.alipay.return');
+
 
 	//确认收货
 	Route::post('orders/{order}/received','OrdersController@received')->name('orders.received');
@@ -71,5 +73,7 @@ Route::group(['middleware' => ['auth','verified']],function(){
 
 Route::get('products','ProductsController@index')->name('products.index');
 Route::get('products/{product}','ProductsController@show')->name('products.show');
+
+Route::post('payment/alipay/notify','PaymentController@alipayNotify')->name('payment.alipay.notify');
 
 

@@ -90,6 +90,7 @@
             @endif
           </div>
         </div>
+
         @if(isset($order->extra['refund_disagree_reason']))
         <div>
           <span>拒绝退款理由：</span>
@@ -98,7 +99,7 @@
         @endif
         <!-- 支付按钮开始 -->
         @if(!$order->paid_at && !$order->closed)
-        <div>
+        <div class="payment-buttons">
           <a class="btn btn-primary btn-sm" href="{{ route('payment.alipay',['order' => $order->id]) }}">支付宝支付</a>
         </div>
         @endif
