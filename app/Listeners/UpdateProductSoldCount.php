@@ -24,6 +24,7 @@ class UpdateProductSoldCount implements ShouldQueue //  implements ShouldQueue �
         // 从事件对象中取出对应的订单
         $order = $event->getOrder();
         // 预加载商品数据
+        //load() 方法支持用 . 来加载关联对象的关联对象
         $order->load('items.product');
         // 循环遍历订单的商品
         foreach($order->items as $item){

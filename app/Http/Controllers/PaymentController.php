@@ -74,7 +74,8 @@ class PaymentController extends Controller
             'payment_no' => $data->trade_no, // 支付宝订单号
         ]);
 
-        // 触发支付成功事件
+        // 触发订单支付成功事件(该事件里关联商品销量更新监听器和发送邮件通知监听器)
+        // 商品销量更新本可以在此编写，但为了代码解耦，减少控制器业务逻辑代码增多，故放在了商品销量更新监听器里
         event(new OrderPaid($order));
 
         return app('alipay')->success();

@@ -11,7 +11,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use App\Models\Order;
 
-//支付成功事件
+//订单支付成功事件
 class OrderPaid
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
@@ -25,7 +25,7 @@ class OrderPaid
      */
     public function __construct(Order $order)
     {
-        //
+        //赋值订单对象
         $this->order = $order;
     }
 
@@ -35,13 +35,4 @@ class OrderPaid
         return $this->order;
     }
 
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return \Illuminate\Broadcasting\Channel|array
-     */
-    public function broadcastOn()
-    {
-        return new PrivateChannel('channel-name');
-    }
 }

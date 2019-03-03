@@ -14,7 +14,9 @@ use App\Models\Order;
 class OrderReviewed
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
+   
     protected $order;
+
     /**
      * Create a new event instance.
      *
@@ -22,20 +24,12 @@ class OrderReviewed
      */
     public function __construct(Order $order)
     {
-        //
+        // 对订单对象赋值
         $this->order = $order;
     }
 
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return \Illuminate\Broadcasting\Channel|array
-     */
-    public function broadcastOn()
-    {
-        return new PrivateChannel('channel-name');
-    }
 
+    // 获取一个订单对象
     public function getOrder()
     {
         return $this->order;
