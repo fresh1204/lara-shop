@@ -12,9 +12,10 @@ class Handler extends ExceptionHandler
      *
      * @var array
      */
-    //屏蔽指定异常写日志
+    //屏蔽指定异常写日志(不需要记录在日志里)
     protected $dontReport = [
         InvalidRequestException::class,
+        CouponCodeUnavailableException::class,
     ];
 
     /**
