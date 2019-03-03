@@ -27,4 +27,7 @@ Route::group([
     $router->post('orders/{order}/ship','OrdersController@ship')->name('admin.orders.ship');
     //拒绝退款
     $router->post('orders/{order}/refund','OrdersController@handleRefund')->name('admin.orders.handle_refund');
+
+    //优惠券首页
+    $router->get('coupon_codes','CouponCodesController@index');
 });

@@ -264,6 +264,7 @@ class OrdersController extends Controller
                     'out_request_no' => $refundNo,   // 退款订单号
                    ]);
                    \Log::info($ret);
+                   
                    // 根据支付宝的文档，如果返回值里有 sub_code 字段说明退款失败
                    if($ret->sub_code){
                     // 将退款失败的保存存入 extra 字段
